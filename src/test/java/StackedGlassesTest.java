@@ -9,36 +9,35 @@ public class StackedGlassesTest {
     public final StackedGlasses sg = new StackedGlasses();
 
     @Test
-    public final void validateInput() {
-        // less than 3 args
-        String[] invalid0 = {"1", "1"};
-        Assert.assertFalse(sg.validateInput(invalid0));
-
-        // NaN in first args
-        String[] invalid1 = {"abc", "1", "2"};
-        Assert.assertFalse(sg.validateInput(invalid1));
-
-        // Non-Int in 2nd
-        String[] invalid2 = {"2.0", "1.1", "2"};
-        Assert.assertFalse(sg.validateInput(invalid2));
-
-        // Non-Int in 3rd
-        String[] invalid3 = {"2.0", "1", "3.1"};
-        Assert.assertFalse(sg.validateInput(invalid3));
-
-        // (i, j) where i < j
-        String[] invalid4 = {"2.0", "2", "3"};
-        Assert.assertFalse(sg.validateInput(invalid4));
-
+    public final void firstGlass () {
+        // input less than one glass
+        Assert.assertEquals(new Double(0.1), sg.getFlowIn(0.1, 0, 0));
+        // input more than one glass
+        Assert.assertEquals(new Double(1.1), sg.getFlowIn(1.1, 0, 0));
     }
 
     @Test
-    public final void firstGlass () {
+    public final void glassesOnLeftEdge() {
+        Assert.assertEquals(new Double(0.5), sg.getFlowIn(2, 1, 0));
+        Assert.assertEquals(new Double(1.0), sg.getFlowIn(3, 1, 0));
+        Assert.assertEquals(new Double(1.5), sg.getFlowIn(4, 1, 0));
 
-        Assert.assertEquals(new Double(0.1), sg.getFlowIn(0.1, 1, 1));
-
-        Assert.assertEquals(new Double(1.1), sg.getFlowIn(1.1, 1, 1));
+        Assert.assertEquals(new Double(0.25), sg.getFlowIn(4, 2, 0));
     }
 
+    @Test
+    public final void glassesOnRightEdge() {
+        Assert.assertEquals(new Double(0.5), sg.getFlowIn(2, 1, 1));
+        Assert.assertEquals(new Double(1.0), sg.getFlowIn(3, 1, 1));
+        Assert.assertEquals(new Double(1.5), sg.getFlowIn(4, 1, 1));
+
+        Assert.assertEquals(new Double(0.25), sg.getFlowIn(4, 2, 2));
+    }
+
+    @Test
+    public final void glassesNotOnEdge() {
+        Assert.assertEquals(new Double(0.5), sg.getFlowIn(4, 2, 1));
+        Assert.assertEquals(new Double(0.25), sg.getFlowIn(6, 3, 1));
+    }
 
 }
