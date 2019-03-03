@@ -8,8 +8,9 @@ public class StackedGlasses {
         if(!Util.validateInput(args)) {
             System.out.println("Invalid inputs.");
         } else {
-            Double inputToGlasses = Double.valueOf(args[0]) / 4;
-            Double flowIn = sg.getFlowIn(inputToGlasses, Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+            Double inputByGlass = Double.valueOf(args[0]) * 4;
+            Double flowIn = sg.getFlowIn(inputByGlass, Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+            System.out.println("Result is " + sg.outputResult(flowIn) + " litre");
         }
     }
 
@@ -40,6 +41,11 @@ public class StackedGlasses {
             double upperRight = getFlowIn(total,i-1, j) - 1.0;
             return getResult(upperLeft) + getResult(upperRight);
         }
+    }
+
+    public double outputResult(Double flowIn) {
+        double measuredByGlass = flowIn >= 1.0 ? 1.0 : (flowIn < 0 ? 0.0 : flowIn);
+        return measuredByGlass * 0.25;
     }
 
     private double getResult(double totalFlowIn) {
