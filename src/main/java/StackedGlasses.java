@@ -3,12 +3,15 @@
  */
 public class StackedGlasses {
 
+    private Double[][] cache;
+    
     public static void main(String[] args) {
         StackedGlasses sg = new StackedGlasses();
         if(!Util.validateInput(args)) {
             System.out.println("Invalid inputs.");
         } else {
             Double inputByGlass = Double.valueOf(args[0]) * 4;
+            sg.cache = new Double[Integer.valueOf(args[1]) + 1][Integer.valueOf(args[1]) + 1];  
             Double flowIn = sg.getFlowIn(inputByGlass, Integer.valueOf(args[1]), Integer.valueOf(args[2]));
             System.out.println("Result is " + sg.outputResult(flowIn) + " litre");
         }
@@ -24,23 +27,28 @@ public class StackedGlasses {
      * Using recursion to solve the problem
      */
     public Double getFlowIn(double total, int i, int j ) {
+        if (cache[i][j] != null) {
+            return cache[i][j];
+        }
         if (i == 0) {
-            return total;
+            cache[i][j] = total;
+            return cache[i][j];
         }
 
         // left edge
         if (j == 0) {
             // total flow-in of the upper level minus 1 (upper one should be full)
             double totalFlowIn = getFlowIn(total, i-1 , j) - 1.0;
-            return getResult(totalFlowIn);
+            cache[i][j] = getResult(totalFlowIn);
         } else if (i == j) {
             double totalFlowIn = getFlowIn(total,i-1, j-1) - 1.0;
-            return getResult(totalFlowIn);
+            cache[i][j] = getResult(totalFlowIn);
         } else {
             double upperLeft = getFlowIn(total, i-1, j-1) - 1.0;
             double upperRight = getFlowIn(total,i-1, j) - 1.0;
-            return getResult(upperLeft) + getResult(upperRight);
+            cache[i][j] = getResult(upperLeft) + getResult(upperRight);
         }
+        return cache[i][j];
     }
 
     public double outputResult(Double flowIn) {
